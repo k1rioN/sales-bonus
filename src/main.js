@@ -36,6 +36,16 @@ function calculateBonusByProfit(index, total, seller) {
 function analyzeSalesData(data, options) {
     const { calculateRevenue, calculateBonus } = options;
 
+    if (
+        !data ||
+        !Array.isArray(data.sellers) || data.sellers.length === 0 ||
+        !Array.isArray(data.products) || data.products.length === 0 ||
+        !Array.isArray(data.purchase_records) || data.purchase_records.length === 0
+    ) {
+        throw new Error('Некорректные входные данные');
+    }
+
+
     if (!data || !Array.isArray(data.sellers) || data.sellers.length === 0) {
         throw new Error('Некорректные данные продавцов');
     }
@@ -80,7 +90,7 @@ function analyzeSalesData(data, options) {
     });
 
     sellerStats.sort((a, b) => b.profit - a.profit);
-    
+
     sellerStats.forEach((seller, index) => {
     seller.bonus = calculateBonus(index, sellerStats.length, seller);
     seller.top_products = Object.entries(seller.top_products)
